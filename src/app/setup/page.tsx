@@ -24,7 +24,7 @@ export default function SetupPage() {
       <h1 className="text-2xl font-semibold">Create the first owner</h1>
       <p className="mt-2 text-sm text-slate-600">This page works once. It needs the server-only bootstrap secret from your environment file.</p>
       <form action={action} className="mt-6 space-y-3 rounded-3xl border bg-white p-6">
-        <Field label="Setup secret"><Input name="secret" type="password" required /></Field>
+        <Field label="Setup secret" hint="Paste BOOTSTRAP_SECRET from .env.local. A saved login password in this box will be rejected."><Input name="secret" type="text" autoComplete="off" required /></Field>
         <Field label="Pharmacy name"><Input name="pharmacy_name" required /></Field>
         <Field label="Owner name"><Input name="owner_name" required /></Field>
         <Field label="Email"><Input name="email" type="email" required /></Field>

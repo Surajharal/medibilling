@@ -457,8 +457,10 @@ export async function bootstrapStore(payload: unknown) {
     gstin: z.string().optional(),
   }).safeParse(payload);
   if (!parsed.success) return fail(parsed.error.issues[0]?.message ?? "Check the setup form.");
-  const expected = process.env.BOOTSTRAP_SECRET ?? "";
-  if (!expected || !sameSecret(parsed.data.secret, expected)) return fail("The setup secret is not valid.");
+  const expected = (process.env["BOOTSTRAP_SECRET"] ?? "").trim();
+  const provided = parsed.data.secret.trim();
+  if (!expected) return fail("BOOTSTRAP_SECRET is missing on this Vercel deployment. Set it for Production, then redeploy without the previous build cache.");
+  if (!sameSecret(provided, expected)) return fail("The setup secret does not match the value saved in Vercel. Paste BOOTSTRAP_SECRET from .env.local, not your login password.");
   const admin = createAdminClient();
   const { count, error: pharmacyCountError } = await admin.from("pharmacies").select("id", { count: "exact", head: true });
   if (pharmacyCountError) return fail("Apply the SQL migrations in Supabase before creating the owner. The pharmacy tables are not there yet.");
